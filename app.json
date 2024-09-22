@@ -19,7 +19,11 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "splash": {
+        "image": "./assets//images/splash.png"
+      },
+      "package": "com.zhamdoctor.StickerSmash"
     },
     "web": {
       "bundler": "metro",
@@ -31,6 +35,12 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "f182701c-4a59-40d3-bee1-adaee9c035f3"
+      }
+    },
+    "owner": "zhamdoctor"
   }
 }

@@ -1,5 +1,6 @@
 import { ScrollViewStyleReset } from 'expo-router/html';
 import { type PropsWithChildren } from 'react';
+import { Gesture } from 'react-native-gesture-handler';
 
 /**
  * This file is web-only and used to configure the root HTML for every web page during static rendering.
@@ -7,6 +8,7 @@ import { type PropsWithChildren } from 'react';
  */
 export default function Root({ children }: PropsWithChildren) {
   return (
+    
     <html lang="en">
       <head>
         <meta charSet="utf-8" />
