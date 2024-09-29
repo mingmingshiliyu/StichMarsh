@@ -13,5 +13,5 @@
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts"
-, "components/TabBar.tsx"  ]
+, "components/TabBar.tsx", "components/TarBar.tsx"  ]
 }
