@@ -16,6 +16,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import * as MediaLibrary from 'expo-media-library';
 import { captureRef } from 'react-native-view-shot';
 import domtoimage from 'dom-to-image';
+import {Drawer} from 'expo-router/drawer'
 
 export default function HomeScreen() {
   const [image,setImage] = useState<{uri:string|undefined,width:number|undefined,height:number|undefined}>({width: 0, height: 0,uri:undefined});
@@ -106,6 +107,26 @@ export default function HomeScreen() {
           </GestureDetector>
           </Animated.View>
           </GestureDetector>
+          <View>
+            <Text>hello</Text>
+            <Drawer>
+            <Drawer.Screen
+              name= "explore"
+              options={{
+                drawerLabel: 'Home',
+                title: 'overcview',
+              }}
+            />
+            <Drawer.Screen
+              name="user/[id]"
+              options={{
+                drawerLabel: 'user',
+                title:'overview',
+              }}
+            />
+            
+          </Drawer>
+          </View>
         </View>
       {/* <Text>{pickedEmoji?.toString()}</Text> */}
         
