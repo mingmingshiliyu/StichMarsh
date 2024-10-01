@@ -1,22 +1,40 @@
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, LayoutChangeEvent } from 'react-native';
 import {BottomTabBarProps} from '@react-navigation/bottom-tabs'
-import { Feather } from '@expo/vector-icons';
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
+import { Icon } from '@expo/vector-icons/build/createIconSet';
+import {TarBarButton} from './TarBarButton';
+import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 
 const MyTabBar:React.FC<BottomTabBarProps> = ({ state, descriptors, navigation })=> {
-
-
-  const iconList = {
-    index: (props:any) => (
-      <Feather name='home' size={24} color={'#222'} {...props}/>
-    ),
-    explore: (props:any) => (<Feather name='compass' size={24} color={'#222'}  {...props}/>),
-    profile: (props:any) => (<Feather name='user' size={24} color={'#222'}  {...props}/>),
-  }
+  const [dimensions,setDimensions] = useState({height:20,width:200})
+  
+  const onTabbarLayout = (e:LayoutChangeEvent) => {
+    setDimensions({
+      height: e.nativeEvent.layout.height,
+      width: e.nativeEvent.layout.width,
+    })
+  };
+  const tabPositionX = useSharedValue(0);
+  const animatedStyle = useAnimatedStyle(()=>{
+    return {
+      transform: [{ translateX: tabPositionX.value }],
+    }
+  })
+  const buttonWidth = dimensions.width/state.routes.length;
 
   return (
-    <View style={styles.tarbar}>
+    <View onLayout={onTabbarLayout} style={styles.tarbar}>
+      <Animated.View style={[animatedStyle,{
+        position: 'absolute',
+        backgroundColor: '#723FEB',
+        borderRadius: 30,
+        marginHorizontal: 12,
+        height: dimensions.height-15,
+        width: buttonWidth-25,
+      }]}/>
       {state.routes.map((route, index) => {
+        //背景色变换
+        
         const { options } = descriptors[route.key];
         const label =
           options.tabBarLabel !== undefined
@@ -28,6 +46,9 @@ const MyTabBar:React.FC<BottomTabBarProps> = ({ state, descriptors, navigation }
         const isFocused = state.index === index;
 
         const onPress = () => {
+          console.log("123adasd")
+          tabPositionX.value=withSpring(buttonWidth*index,{duration: 1500})
+
           const event = navigation.emit({
             type: 'tabPress',
             target: route.key,
@@ -47,23 +68,34 @@ const MyTabBar:React.FC<BottomTabBarProps> = ({ state, descriptors, navigation }
         };
 
         return (
-          <TouchableOpacity
-            accessibilityRole="button"
-            accessibilityState={isFocused ? { selected: true } : {}}
-            accessibilityLabel={options.tabBarAccessibilityLabel}
-            testID={options.tabBarTestID}
-            onPress={onPress}
+          // <TouchableOpacity
+          //   accessibilityRole="button"
+          //   accessibilityState={isFocused ? { selected: true } : {}}
+          //   accessibilityLabel={options.tabBarAccessibilityLabel}
+          //   testID={options.tabBarTestID}
+          //   onPress={onPress}
             
+          //   onLongPress={onLongPress}
+          //   style={styles.tabItem}
+          // >
+          //   {iconList[route.name]===undefined? null:iconList[route.name]({color: isFocused? '#673ab7':'#222'})}
+          //   {
+                
+          //     //  (iconList as any)[route.name as 'index'|'profile'|'explorer']({color: isFocused? '#673ab7':'#222'})
+          //     //  myObject[route.name]({color: isFocused? '#673ab7':'#222'})
+          //   }
+          //   <Text style={{ color: isFocused ? '#673ab7' : '#222' }}>
+          //     {label}
+          //   </Text>
+          // </TouchableOpacity>
+          <TarBarButton
+            key={route.name}
+            isFocused={isFocused}
+            routeName = {route.name}
+            onPress={onPress}
             onLongPress={onLongPress}
-            style={styles.tabItem}
-          >
-            {
-               iconList[route.name:'index'|'explore']({color: isFocused? '#673ab7':'#222'})
-            }
-            <Text style={{ color: isFocused ? '#673ab7' : '#222' }}>
-              {label}
-            </Text>
-          </TouchableOpacity>
+            label={label}
+          />
         );
       })}
     </View>
